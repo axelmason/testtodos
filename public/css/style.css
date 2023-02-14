@@ -1,0 +1,105 @@
+@font-face {
+    font-family: Rubik;
+    src: url(../fonts/Rubik-VariableFont_wght.ttf);
+}
+
+* {
+    font-family: Rubik, sans-serif!important;
+}
+
+.logo__wrapper {
+    width: 100px;
+}
+
+.logo__wrapper img {
+    width: 100%;
+    transition: 1s ease;
+}
+
+.logo__wrapper img:hover {
+    transform: scale(0.95);
+}
+
+.auth-buttons a {
+    text-decoration: none;
+    color: gray;
+    transition: .5s ease;
+}
+
+.auth-buttons a:hover {
+    color: black;
+    text-decoration: underline;
+}
+
+.tag-item {
+    background-color: #e8e8e8;
+    width: max-content;
+    padding: 3px 3px;
+}
+.tag-item::before {
+    content: '#';
+}
+
+.create-tag-input {
+    width: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+
+    transition: .3s ease;
+}
+.create-tag-input.is-invalid {
+    background-color: rgba(255, 0, 0, .3);
+}
+
+.create-tag-button, .delete-tag-button {
+    cursor: pointer;
+}
+
+.status-button {
+    width: 50px;
+    height: 50px;
+}
+
+.todos__table td {
+    vertical-align: middle;
+}
+
+.todo-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.todo-image img {
+    width: 100%;
+    position: absolute;
+}
+
+.todo-image label {
+    width: 100%;
+    display: flex;
+    margin: 5px 0;
+    justify-content: center;
+    z-index: 1;
+}
+
+.todo-image label div {
+    width: 100%;
+    margin: 0 5px;
+}
+
+.todo-image-preview {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1em 2em;
+    border: 1px solid black;
+}
