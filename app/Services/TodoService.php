@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Tag;
 use App\Models\Todo;
+use App\Models\User;
 use Illuminate\Http\File;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 
@@ -34,7 +37,11 @@ class TodoService
 
     public function show($todoId)
     {
-        return $this->model->with('tags')->find($todoId);
+        return $this->model->with('tags')
+            ->where('created_by', auth()->user()->id)
+            ->orWhereHas('members', function ($query) {
+                $query->where('users.id', auth()->user()->id);
+        })->find($todoId);
     }
 
     public function upload($todoId, UploadedFile $file)
@@ -63,12 +70,61 @@ class TodoService
     public function attachTags(int $todoId, array $tags)
     {
         $todo = Todo::find($todoId);
-        $todo->tags()->attach(array_keys($tags));
+        $todo->tags()->syncWithoutDetaching(array_keys($tags));
     }
 
     public function detachTags(int $todoId, array $tags)
     {
         $todo = Todo::find($todoId);
         $todo->tags()->detach(array_keys($tags));
+    }
+
+    public function search(Request $data)
+    {
+        $query = Todo::query()
+            ->where('created_by', auth()->user()->id)
+            ->orWhereHas('members', function($query) {
+                $query->where('users.id', auth()->user()->id);
+            });
+
+        $tags = array_keys($data->except('query'));
+        $search = $data->input('query');
+
+        if($tags) {
+            $tagIds = Tag::whereIn('id', $tags)->pluck('id');
+
+            $query->whereHas('tags', function ($query) use ($tagIds) {
+                $query->whereIn('tags.id', $tagIds);
+            });
+        }
+        if($search) {
+            $query->where('title', 'LIKE', "%$search%");
+        }
+
+        return $query->get();
+    }
+
+    public function giveAccess($email, $todoId)
+    {
+        $todo = Todo::find($todoId);
+        $user = User::where('email', $email)->first();
+
+        if($user) {
+            $todo->members()->syncWithoutDetaching($user->id);
+
+            return back()->with('msg', "Пользователь {$user->email} добавлен в список участников.");
+        } else {
+            return back()->withErrors(['msg' => 'Пользователя с таким email не существует']);
+        }
+    }
+
+    public function removeAccess($todoId, $memberId)
+    {
+        $todo = Todo::find($todoId);
+        $user = User::where('id', $memberId)->first();
+
+        $todo->members()->detach($user->id);
+
+        return back()->with('msg', "Пользователь $user->email удалён из участников.");
     }
 }

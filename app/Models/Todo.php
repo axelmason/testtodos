@@ -27,7 +27,7 @@ class Todo extends Model
         return $this->belongsToMany(Tag::class, 'todo_tags', 'todo_id', 'tag_id');
     }
 
-    public function available_todos()
+    public function members()
     {
         return $this->belongsToMany(User::class, 'shared_todos', 'todo_id', 'user_id');
     }

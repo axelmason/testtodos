@@ -27,7 +27,10 @@ Route::middleware('auth')->group(function() {
         Route::get('/create', 'createPage')->name('createPage');
         Route::post('/create', 'create')->name('create');
 
+        Route::get('/search', 'search')->name('search');
+
         Route::get('/{todo_id}', 'show')->name('show');
+
 
         Route::post('/{todo_id}/image/upload', 'uploadImage');
         Route::get('/{todo_id}/image/delete', 'deleteImage')->name('deleteImage');
@@ -36,6 +39,9 @@ Route::middleware('auth')->group(function() {
 
         Route::post('/{todo_id}/tags/attach', 'attachTags')->name('attachTags');
         Route::post('/{todo_id}/tags/detach', 'detachTags')->name('detachTags');
+
+        Route::post('/{todo_id}/giveAccess', 'giveAccess')->name('giveAccess');
+        Route::get('/{todo_id}/removeAccess/{member_id}', 'removeAccess')->name('removeAccess');
     });
 
     Route::name('tag.')->prefix('/tag')->controller(TagController::class)->group(function() {

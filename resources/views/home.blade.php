@@ -23,8 +23,21 @@
                 </div>
             </div>
             <hr>
-            <div class="todos__block mt-3">
-                <a href="{{ route('todo.createPage') }}" class="btn btn-outline-dark">Создать TODO</a>
+            <div class="todos__block">
+                <a href="{{ route('todo.createPage') }}" class="btn btn-outline-dark mb-1">Создать TODO</a>
+                <form action="{{ route('todo.search') }}" class="d-flex flex-column">
+                    <input type="text" class="form-control" name="query" placeholder="Заголовок TODO">
+                    <div class="search-tags my-2">
+                        @foreach ($tags as $tag)
+                            <label for="{{ $tag->id }}" class="tag-item mx-1">
+                                <span>{{ $tag->name }}</span>
+                                <input type="checkbox" name="{{ $tag->id }}"
+                                    id="{{ $tag->id }}">
+                            </label>
+                        @endforeach
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary" style="width: max-content;">Поиск</button>
+                </form>
                 <table class="todos__table table table-hover">
                     <tbody>
                         @forelse ($todos as $todo)
