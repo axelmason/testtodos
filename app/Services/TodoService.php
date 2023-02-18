@@ -81,11 +81,7 @@ class TodoService
 
     public function search(Request $data)
     {
-        $query = Todo::query()
-            ->where('created_by', auth()->user()->id)
-            ->orWhereHas('members', function($query) {
-                $query->where('users.id', auth()->user()->id);
-            });
+        $query = Todo::query();
 
         $tags = array_keys($data->except('query'));
         $search = $data->input('query');
@@ -94,12 +90,20 @@ class TodoService
             $tagIds = Tag::whereIn('id', $tags)->pluck('id');
 
             $query->whereHas('tags', function ($query) use ($tagIds) {
-                $query->whereIn('tags.id', $tagIds);
+                foreach ($tagIds as $tag ) {
+                    return $query->where('tags.id', $tag);
+                }
             });
         }
         if($search) {
             $query->where('title', 'LIKE', "%$search%");
         }
+
+        $query
+            ->where('created_by', auth()->user()->id)
+            ->orWhereHas('members', function($query) {
+                $query->where('users.id', auth()->user()->id);
+        });
 
         return $query->get();
     }
