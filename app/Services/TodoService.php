@@ -90,9 +90,7 @@ class TodoService
             $tagIds = Tag::whereIn('id', $tags)->pluck('id');
 
             $query->whereHas('tags', function ($query) use ($tagIds) {
-                foreach ($tagIds as $tag ) {
-                    return $query->where('tags.id', $tag);
-                }
+                return $query->whereIn('tags.id', $tagIds);
             });
         }
         if($search) {
