@@ -32,13 +32,13 @@
                                 <td style="width: 50px;">
                                     <div data-id="{{ $todo->id }}" data-status="{{ $todo->completed }}" class="status-button btn @if($todo->completed) btn-success @else btn-outline-success @endif rounded-circle"></div>
                                 </td>
-                                <td class="d-flex align-items-center">
-                                    <div class="todo-img-wrapper" style="max-width: 50px;">
-                                        <img style="width: 100%;" src="{{ asset('storage/'.$todo->image) }}" alt="">
+                                <td class="inline-block">
+                                    <div class="todo-img-wrapper d-inline" style="max-width: 50px;">
+                                        <img style="max-width: 50px;" src="{{ asset('storage/'.$todo->image) }}" alt="">
                                     </div>
-                                    <div class="ms-1">
+                                    <span class="ms-1">
                                         {{ $todo->title }}
-                                    </div>
+                                    </span>
                                 </td>
                                 <td>
                                     @foreach ($todo->tags as $tag)

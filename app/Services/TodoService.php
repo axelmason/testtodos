@@ -18,7 +18,11 @@ class TodoService
 
     public function create($data)
     {
-        return $this->model->create($data+['created_by' => auth()->user()->id]);
+        $todo = $this->model->create($data+['created_by' => auth()->user()->id]);
+
+        if(isset($data['image'])) {
+            $this->upload($todo['id'], $data['image']);
+        }
     }
 
     public function toggleStatus($data)
